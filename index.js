@@ -19,6 +19,7 @@ const gameBoard = (() => {
 
   const getGridCell = (index) => {
     if (index > board.length) return;
+    console.log("indu", index);
     return board[index];
   };
 
@@ -39,11 +40,12 @@ const gameBoard = (() => {
 const gameController = (() => {
   let playerX = Player("X");
   let playerO = Player("O");
-  let round = 1;
+  let round = 0;
 
   const playRound = (index) => {
     gameBoard.setGridCell(index, getPlayerSymbol());
     round++;
+    console.log("round", round);
   };
 
   const getPlayerSymbol = () =>
@@ -56,22 +58,14 @@ const gameController = (() => {
 
 const displayController = (() => {
   document.querySelectorAll(".grid-item").forEach((item) => {
-    gameController.playRound(item.dataset.index);
-    let symbol = gameBoard.getGridCell(item.dataset.index);
-    item.addEventListener("click", (e) => setCellDisplay(e, symbol));
+    item.addEventListener("click", (e) => {
+      if (!e.target.textContent) {
+        gameController.playRound(item.dataset.index);
+        e.target.textContent = gameBoard.getGridCell(item.dataset.index);
+      }
+    });
   });
-
-  function setCellDisplay(e, symbol) {
-    e.target.textContent = symbol;
-    console.log("whoop");
-  }
 })();
 
-// document
-//   .querySelectorAll(".grid-item")
-//   .forEach((item) =>
-//     item.addEventListener(
-//       "click",
-//       gameBoard.setGridCell(e.target.dataset.index, "X")
-//     )
-//   );
+// symbol should be placed in random places
+//figure out why the grid cells are getting blank on clicking
