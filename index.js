@@ -50,24 +50,33 @@ const gameController = (() => {
 
   return {
     playRound,
-    // getDisplaySymbol,
     getPlayerSymbol,
   };
 })();
 
 const displayController = (() => {
-  document.querySelectorAll(".grid-item").forEach((item) => {
-    item.addEventListener("click", (e) => {
-      if (!e.target.textContent) {
-        gameController.playRound(item.dataset.index);
-        e.target.textContent = gameBoard.getGridCell(item.dataset.index);
-        document.querySelector(
-          ".status>p"
-        ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
-      }
-    });
-  });
-})();
+  function updateGridCell(e, item) {
+    if (!e.target.textContent) {
+      gameController.playRound(item.dataset.index);
+      e.target.textContent = gameBoard.getGridCell(item.dataset.index);
+      document.querySelector(
+        ".status>p"
+      ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
+    }
+  }
 
-// symbol should be placed in random places
-//figure out why the grid cells are getting blank on clicking
+  function resetGrid() {
+    gameBoard.reset();
+    document
+      .querySelectorAll(".grid-item")
+      .forEach(
+        (item) => (item.textContent = gameBoard.getGridCell(item.dataset.index))
+      );
+  }
+
+  document.querySelectorAll(".grid-item").forEach((item) => {
+    item.addEventListener("click", (e) => updateGridCell(e, item));
+  });
+
+  document.querySelector(".control-btn").addEventListener("click", resetGrid);
+})();
