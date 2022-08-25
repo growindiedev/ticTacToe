@@ -19,7 +19,6 @@ const gameBoard = (() => {
 
   const getGridCell = (index) => {
     if (index > board.length) return;
-    console.log("indu", index);
     return board[index];
   };
 
@@ -31,11 +30,6 @@ const gameBoard = (() => {
 
   return { reset, setGridCell, getGridCell };
 })();
-
-// function updateCell(e) {
-//   e.target.textContent = "X";
-//   console.log("why", e.target.dataset.index);
-// }
 
 const gameController = (() => {
   let playerX = Player("X");
@@ -51,8 +45,13 @@ const gameController = (() => {
   const getPlayerSymbol = () =>
     round % 2 === 1 ? playerX.getSymbol() : playerO.getSymbol();
 
+  // const getDisplaySymbol = () =>
+  //   round % 2 === 1 ? playerO.getSymbol() : playerX.getSymbol();
+
   return {
     playRound,
+    // getDisplaySymbol,
+    getPlayerSymbol,
   };
 })();
 
@@ -62,6 +61,9 @@ const displayController = (() => {
       if (!e.target.textContent) {
         gameController.playRound(item.dataset.index);
         e.target.textContent = gameBoard.getGridCell(item.dataset.index);
+        document.querySelector(
+          ".status>p"
+        ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
       }
     });
   });
