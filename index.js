@@ -19,7 +19,6 @@ const gameBoard = (() => {
 
   const getGridCell = (index) => {
     if (index > board.length) return;
-    console.log("indu", index);
     return board[index];
   };
 
@@ -32,11 +31,6 @@ const gameBoard = (() => {
   return { reset, setGridCell, getGridCell };
 })();
 
-// function updateCell(e) {
-//   e.target.textContent = "X";
-//   console.log("why", e.target.dataset.index);
-// }
-
 const gameController = (() => {
   let playerX = Player("X");
   let playerO = Player("O");
@@ -48,24 +42,69 @@ const gameController = (() => {
     console.log("round", round);
   };
 
+  const decideWinner = () => {
+    const combos = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+    ];
+
+    combos.forEach((row) => {
+      let a = row[0],
+        b = row[1],
+        c = row[2];
+      if (
+        gameBoard.getGridCell(a) !== "" &&
+        gameBoard.getGridCell(a) === gameBoard.getGridCell(b) &&
+        gameBoard.getGridCell(b) === gameBoard.getGridCell(c)
+      ) {
+        alert("you won");
+        // needs a dialog box
+      }
+    });
+    //check board array with combinations with combos
+    //https://stackoverflow.com/questions/58113438/javascript-tic-tac-toe-check-if-someone-won
+  };
+
   const getPlayerSymbol = () =>
     round % 2 === 1 ? playerX.getSymbol() : playerO.getSymbol();
 
   return {
     playRound,
+    getPlayerSymbol,
+    decideWinner,
   };
 })();
 
 const displayController = (() => {
-  document.querySelectorAll(".grid-item").forEach((item) => {
-    item.addEventListener("click", (e) => {
-      if (!e.target.textContent) {
-        gameController.playRound(item.dataset.index);
-        e.target.textContent = gameBoard.getGridCell(item.dataset.index);
-      }
-    });
-  });
-})();
+  function updateGridCell(e, item) {
+    if (!e.target.textContent) {
+      gameController.playRound(item.dataset.index);
+      e.target.textContent = gameBoard.getGridCell(item.dataset.index);
+      document.querySelector(
+        ".status>p"
+      ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
+      gameController.decideWinner();
+    }
+  }
 
-// symbol should be placed in random places
-//figure out why the grid cells are getting blank on clicking
+  function resetGrid() {
+    gameBoard.reset();
+    document
+      .querySelectorAll(".grid-item")
+      .forEach(
+        (item) => (item.textContent = gameBoard.getGridCell(item.dataset.index))
+      );
+  }
+
+  document.querySelectorAll(".grid-item").forEach((item) => {
+    item.addEventListener("click", (e) => updateGridCell(e, item));
+  });
+
+  document.querySelector(".control-btn").addEventListener("click", resetGrid);
+})();
