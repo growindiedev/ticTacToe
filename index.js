@@ -64,6 +64,7 @@ const gameController = (() => {
         gameBoard.getGridCell(b) === gameBoard.getGridCell(c)
       ) {
         alert("you won");
+        // needs a dialog box
       }
     });
     //check board array with combinations with combos
@@ -85,10 +86,10 @@ const displayController = (() => {
     if (!e.target.textContent) {
       gameController.playRound(item.dataset.index);
       e.target.textContent = gameBoard.getGridCell(item.dataset.index);
-      gameController.decideWinner();
       document.querySelector(
         ".status>p"
       ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
+      gameController.decideWinner();
     }
   }
 
