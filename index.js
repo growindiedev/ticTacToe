@@ -36,13 +36,19 @@ const gameController = (() => {
   let playerO = Player("O");
   let round = 0;
 
+  let Click = true;
+
   const playRound = (index) => {
     gameBoard.setGridCell(index, getPlayerSymbol());
     round++;
     console.log("round", round);
   };
 
-  const decideWinner = () => {
+  const enableClick = () => (Click = true);
+  const disableClick = () => (Click = false);
+  const getClick = () => Click;
+
+  const decideWinner = (currentPlayer) => {
     const combos = [
       [0, 1, 2],
       [3, 4, 5],
@@ -63,12 +69,12 @@ const gameController = (() => {
         gameBoard.getGridCell(a) === gameBoard.getGridCell(b) &&
         gameBoard.getGridCell(b) === gameBoard.getGridCell(c)
       ) {
-        alert("you won");
-        // needs a dialog box
+        document.querySelector(
+          ".status>p"
+        ).textContent = `Player ${currentPlayer} won the game`;
+        disableClick();
       }
     });
-    //check board array with combinations with combos
-    //https://stackoverflow.com/questions/58113438/javascript-tic-tac-toe-check-if-someone-won
   };
 
   const getPlayerSymbol = () =>
@@ -78,28 +84,37 @@ const gameController = (() => {
     playRound,
     getPlayerSymbol,
     decideWinner,
+    getClick,
+    enableClick,
+    disableClick,
   };
 })();
 
 const displayController = (() => {
   function updateGridCell(e, item) {
-    if (!e.target.textContent) {
+    if (gameController.getClick() && !e.target.textContent) {
       gameController.playRound(item.dataset.index);
       e.target.textContent = gameBoard.getGridCell(item.dataset.index);
+
       document.querySelector(
         ".status>p"
       ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
-      gameController.decideWinner();
+      gameController.decideWinner(e.target.textContent);
     }
   }
 
   function resetGrid() {
+    gameController.enableClick();
     gameBoard.reset();
     document
       .querySelectorAll(".grid-item")
       .forEach(
         (item) => (item.textContent = gameBoard.getGridCell(item.dataset.index))
       );
+
+    document.querySelector(
+      ".status>p"
+    ).textContent = `Player ${gameController.getPlayerSymbol()}'s turn`;
   }
 
   document.querySelectorAll(".grid-item").forEach((item) => {

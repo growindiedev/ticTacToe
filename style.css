@@ -5,7 +5,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* border: 1px solid red; */
 }
 
 .container {
@@ -18,9 +17,7 @@
   gap: 1rem;
 }
 
-.container > *{
-  /* border: 1px solid rebeccapurple; */
-}
+
 
 .title {
   text-align: center;
@@ -33,7 +30,6 @@
 }
 
 .status {
-  /* height: 3rem; */
   min-height: 2rem;
   font-family: 'Press Start 2P', cursive;
   text-align: center;
@@ -42,7 +38,6 @@
 }
 
 .status p {
-  /* border: 5px solid white; */
   align-self: center;
 }
 
@@ -56,10 +51,10 @@
 }
 
 .grid-item {
+  cursor: pointer;
   background-color: #fff;
   font-size: 6rem;
   text-align: center;
-  /* color: #374151; */
 
     text-transform: uppercase;
     
@@ -83,7 +78,6 @@
 }
 
 .control-btn {
-  /* padding: 1rem 2rem; */
   align-self: center;
   justify-self: center;
   display: inline-block;
